@@ -17,7 +17,7 @@ const TradeInInformation = function (props) {
             <div className={`${classes.flex__row__item} ${classes.carDetails}`}>
               <div className={classes.name}>{props.name}</div>
               <div className={classes.color} />
-              <div className={classes.vin}><a onClick={props.onEditClick}>Click to Edit</a></div>
+              <div className={classes.vin}><a onClick={props.onEditClick}>Click to Edit</a> <a className={classes.pipeLine}> | </a> <a onClick={props.onRemoveClick}>Click to Remove </a></div>
             </div>
           </div>
         </div>
@@ -39,6 +39,7 @@ TradeInInformation.propTypes = {
   leaseTerm: PropTypes.string,
   apr: PropTypes.string,
   onEditClick: PropTypes.func,
+  onRemoveClick: PropTypes.func,
   offersAndIncentives: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     value: PropTypes.string

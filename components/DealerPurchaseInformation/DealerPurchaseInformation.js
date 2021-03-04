@@ -20,7 +20,7 @@ const PurchaseInformation = function (props) {
       return wtf;
     });
   }
-  
+
   const downPayment = props.downPayment === 0 ? '0' : props.downPayment;
 
   return (
@@ -79,7 +79,7 @@ const PurchaseInformation = function (props) {
             />
           }
 
-          {downPayment &&
+          {downPayment > -1 &&
             <PurchaseLineItem
               name="Down Payment"
               value={downPayment}
@@ -88,7 +88,7 @@ const PurchaseInformation = function (props) {
             />
           }
 
-          {props.tradeInOffer &&
+          {props.tradeInOffer > -1 &&
             <PurchaseLineItem
               name="Trade In Offer"
               value={props.tradeInOffer}

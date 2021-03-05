@@ -45,146 +45,155 @@ const PurchaseInformation = function (props) {
             </div>
           </div>
 
-          <div>
+          {!props.hasDealId &&
             <div className={classes.totalMonthlyPayment}>
-              <label>Current Estimated Payment:</label>
-              <h1 className={classes.payment}><span>$</span>{formatCurrency(props.monthlyPayment, true)}* <span className={classes.perMonth}>/ month</span></h1>
+              <label>Vehicle Price</label>
+              <h1 className={classes.payment}><span>$</span>{formatCurrency(props.msrp, true)}</h1>
             </div>
+          }
 
-            <div className={classes.dropdowns}>
-              <Dropdown
-                label="Credit Score"
-                options={props.creditScoreOptions}
-                validationErrors={[]}
-                validateFunction={() => {}}
-                onChange={props.updateCreditScore}
-                selectedValue={props.creditScore}
-                dropdownAttrs={{ name: 'creditScore' }}
-              />
-              <Dropdown
-                label="Terms"
-                options={props.termOptions}
-                validationErrors={[]}
-                validateFunction={() => {}}
-                onChange={props.updateTerms}
-                selectedValue={props.terms}
-                dropdownAttrs={{ name: 'terms' }}
-              />
+          {props.hasDealId &&
+            <div>
+              <div className={classes.totalMonthlyPayment}>
+                <label>Current Estimated Payment:</label>
+                <h1 className={classes.payment}><span>$</span>{formatCurrency(props.monthlyPayment, true)}* <span className={classes.perMonth}>/ month</span></h1>
+              </div>
+
+              <div className={classes.dropdowns}>
+                <Dropdown
+                  label="Credit Score"
+                  options={props.creditScoreOptions}
+                  validationErrors={[]}
+                  validateFunction={() => { }}
+                  onChange={props.updateCreditScore}
+                  selectedValue={props.creditScore}
+                  dropdownAttrs={{ name: 'creditScore' }}
+                />
+                <Dropdown
+                  label="Terms"
+                  options={props.termOptions}
+                  validationErrors={[]}
+                  validateFunction={() => { }}
+                  onChange={props.updateTerms}
+                  selectedValue={props.terms}
+                  dropdownAttrs={{ name: 'terms' }}
+                />
+              </div>
+
+              <div className={classes.priceBreakdown}>
+                <a onClick={props.togglePriceBreakdown}>{!props.showPriceBreakdown ? 'Hide Payment Breakdown' : 'Show Payment Breakdown'}</a>
+              </div>
+              <div className={classes.lineItems} hidden={props.showPriceBreakdown}>
+                {props.msrp &&
+                  <PurchaseLineItem
+                    name="Price"
+                    value={props.msrp}
+                    positive
+                  />
+                }
+
+                {downPayment &&
+                  <PurchaseLineItem
+                    name="Down Payment"
+                    value={downPayment}
+                  />
+                }
+
+                {props.tradeInOffer &&
+                  <PurchaseLineItem
+                    name="Trade In Offer"
+                    value={props.tradeInOffer}
+                  />
+                }
+
+                {props.tradeInAmountOwed && (parseFloat(props.tradeInAmountOwed) > 0) &&
+                  <PurchaseLineItem
+                    name="Amount Owed"
+                    value={props.tradeInAmountOwed}
+                    positive
+                  />
+                }
+
+                {addOnsWithValues.length > 0 && addOnsWithValues.map((row, index) => (
+                  <PurchaseLineItem
+                    key={index}
+                    name={row.title}
+                    value={row.warrantyTermAndValue[row.selectedTermAndValueIndex].price}
+                    positive
+                  />
+                ))
+                }
+
+                {(props.offersAndIncentives && props.offersAndIncentives.length > 0) && props.offersAndIncentives.map((row, index) => (
+                  <PurchaseLineItem
+                    key={index}
+                    name={row.name}
+                    value={row.amount}
+                    infoType={row.infoType}
+                  />
+                ))
+                }
+
+                {(props.extraFees && props.extraFees.length > 0) && props.extraFees.map((row, index) => (
+                  <PurchaseLineItem
+                    key={index}
+                    name={row.name}
+                    value={row.amount}
+                    positive
+                  />
+                ))
+                }
+
+                {props.tax ?
+                  <PurchaseLineItem
+                    name="Tax"
+                    value={props.tax}
+                    positive
+                  /> : null
+                }
+
+                {props.total &&
+                  <PurchaseLineItem
+                    name="Total*"
+                    value={props.total}
+                    positive
+                  />
+                }
+
+                {!props.leasingVehicle && props.totalLoanAmount &&
+                  <PurchaseLineItem
+                    name="Total Loan Amount*"
+                    value={props.totalLoanAmount}
+                    positive
+                  />
+                }
+
+                {props.leasingVehicle && props.totalMonthlyPayment &&
+                  <PurchaseLineItem
+                    name="Total Monthly Payment*"
+                    value={props.totalMonthlyPayment}
+                    positive
+                  />
+                }
+
+                {(addOnsWithoutValues && addOnsWithoutValues.length > 0) &&
+                  <div className={classes.addOnHeader}>You're Interested In:</div>
+                }
+
+                {(props.warrantiesAndAddons && addOnsWithoutValues.length > 0) && addOnsWithoutValues.map((row, index) => (
+                  <PurchaseLineItem
+                    key={index}
+                    name={row.title}
+                    value="Pending"
+                  />
+                ))
+                }
+              </div>
             </div>
-
-            <div className={classes.priceBreakdown}>
-              <a onClick={props.togglePriceBreakdown}>View Price Breakdown</a>
-            </div>
-            <div className={classes.lineItems} hidden={!props.showPriceBreakdown}>
-              {props.msrp &&
-                <PurchaseLineItem
-                  name="Price"
-                  value={props.msrp}
-                  positive
-                />
-              }
-
-              {downPayment &&
-                <PurchaseLineItem
-                  name="Down Payment"
-                  value={downPayment}
-                />
-              }
-
-              {props.tradeInOffer &&
-                <PurchaseLineItem
-                  name="Trade In Offer"
-                  value={props.tradeInOffer}
-                />
-              }
-
-              {props.tradeInAmountOwed && (parseFloat(props.tradeInAmountOwed) > 0) &&
-                <PurchaseLineItem
-                  name="Amount Owed"
-                  value={props.tradeInAmountOwed}
-                  positive
-                />
-              }
-
-              {addOnsWithValues.length > 0 && addOnsWithValues.map((row, index) => (
-                <PurchaseLineItem
-                  key={index}
-                  name={row.title}
-                  value={row.warrantyTermAndValue[row.selectedTermAndValueIndex].price}
-                  positive
-                />
-              ))
-              }
-
-              {(props.offersAndIncentives && props.offersAndIncentives.length > 0) && props.offersAndIncentives.map((row, index) => (
-                <PurchaseLineItem
-                  key={index}
-                  name={row.name}
-                  value={row.amount}
-                  infoType={row.infoType}
-                />
-              ))
-              }
-
-              {(props.extraFees && props.extraFees.length > 0) && props.extraFees.map((row, index) => (
-                <PurchaseLineItem
-                  key={index}
-                  name={row.name}
-                  value={row.amount}
-                  positive
-                />
-              ))
-              }
-
-              {props.tax ?
-                <PurchaseLineItem
-                  name="Tax"
-                  value={props.tax}
-                  positive
-                /> : null
-              }
-
-              {props.total &&
-                <PurchaseLineItem
-                  name="Total*"
-                  value={props.total}
-                  positive
-                />
-              }
-
-              {!props.leasingVehicle && props.totalLoanAmount &&
-                <PurchaseLineItem
-                  name="Total Loan Amount*"
-                  value={props.totalLoanAmount}
-                  positive
-                />
-              }
-
-              {props.leasingVehicle && props.totalMonthlyPayment &&
-                <PurchaseLineItem
-                  name="Total Monthly Payment*"
-                  value={props.totalMonthlyPayment}
-                  positive
-                />
-              }
-
-              {(addOnsWithoutValues && addOnsWithoutValues.length > 0) &&
-                <div className={classes.addOnHeader}>You're Interested In:</div>
-              }
-
-              {(props.warrantiesAndAddons && addOnsWithoutValues.length > 0) && addOnsWithoutValues.map((row, index) => (
-                <PurchaseLineItem
-                  key={index}
-                  name={row.title}
-                  value="Pending"
-                />
-              ))
-              }
-            </div>
-          </div>
+          }
         </div>
       </div>
-      <div className={classes.finePrintSection}>*Subject to change upon dealer inspection. Monthly payment displayed is only an estimate and may change.</div>
+      {props.hasDealId && <div className={classes.finePrintSection}>*Subject to change upon dealer inspection. Monthly payment displayed is only an estimate and may change.</div>}
     </div>
   );
 };
@@ -221,7 +230,8 @@ PurchaseInformation.propTypes = {
   totalLoanAmount: PropTypes.string,
   totalMonthlyPayment: PropTypes.string,
   tax: PropTypes.string,
-  total: PropTypes.string
+  total: PropTypes.string,
+  hasDealId: PropTypes.bool
 };
 
 export default PurchaseInformation;

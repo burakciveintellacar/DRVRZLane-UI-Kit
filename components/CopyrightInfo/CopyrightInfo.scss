@@ -1,0 +1,31 @@
+@import '~fastlane-ui-kit/styles/utils/media-queries';
+
+.copyrightInfo {
+  text-align: center;
+  color: #3A4750;
+  margin-top: 1rem;
+  font-size: 12px;
+
+  p,a {
+    font-size: 12px;
+    color: #3A4750;
+  }
+
+  .poweredBy {
+    width: 135px;
+    margin-bottom: .8rem;
+  }
+
+  div:nth-of-type(2) {
+    margin-bottom: 1rem;
+
+    @include gmq(portrait) {
+      margin-bottom: .5rem;
+    }
+  }
+
+  @include gmq(portrait) {
+    position: absolute;
+    bottom: 5.5em;
+  }
+}

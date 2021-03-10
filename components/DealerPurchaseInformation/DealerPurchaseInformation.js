@@ -93,7 +93,7 @@ const PurchaseInformation = function (props) {
               name="Trade In Offer"
               value={props.tradeInOffer}
               isEdit={props.isEdit}
-              onChange={props.onTradeOfferChange}
+              onChange={props.onTradeInOfferChange}
             />
           }
 
